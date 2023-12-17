@@ -1,23 +1,23 @@
 import "./pages/index.css";
 import { initialCards } from "./components/cards.js";
 import { createCard, deleteCard, likeButtonActive } from "./components/card.js";
-import { popupVisible } from "./components/modal.js";
+import { openPopup, closePopup } from "./components/modal.js";
 
 const cardList = document.querySelector(".places__list");
 
 // @todo: Вывести карточки на страницу
-function renderCard(callback, listWhereFrom, listWhere) {
+function renderInitialCards(callback, listWhereFrom, listWhere) {
   listWhereFrom.forEach(function (item) {
-    listWhere.prepend(createCard(callback, item));
+    listWhere.prepend(createCard(callback, item, likeButtonActive, openImage));
   });
 }
 
-renderCard(deleteCard, initialCards, cardList);
+renderInitialCards(deleteCard, initialCards, cardList);
 
 //кнопка редактирования профиля
-const buttonEdit = document.querySelector(".profile__edit-button");
+const buttonOpenEditProfilePopup = document.querySelector(".profile__edit-button");
 //модульное окно редактирования профиля
-const popupEdit = document.querySelector(".popup_type_edit");
+const popupEditProfile = document.querySelector(".popup_type_edit");
 
 //кнопка создания новой карточки
 const buttonNewCard = document.querySelector(".profile__add-button");
@@ -27,86 +27,41 @@ const popupNewCard = document.querySelector(".popup_type_new-card");
 //модульное окно открытия картинки
 const popupImage = document.querySelector(".popup_type_image");
 
-//Добавление к попапам класс для закрытия т.к. при добавления через функцию первое открытие нормально не работает
-popupEdit.classList.add("popup_is-animated");
-popupNewCard.classList.add("popup_is-animated");
-popupImage.classList.add("popup_is-animated");
 
 //при клике на на кнопку редактирования профиля, открытие модального окна
-buttonEdit.addEventListener("click", function () {
+buttonOpenEditProfilePopup.addEventListener("click", function () {
   //добавление в модульное окно редактирования профиля нынешних значения
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
-  popupVisible(popupEdit);
-});
-//Закрытие модального окна редактирования профиля
-popupEdit.addEventListener("click", function (evt) {
-  if (
-    evt.target.classList.contains("popup__close") ||
-    evt.target.classList.contains("popup")
-  ) {
-    popupVisible(popupEdit);
-  }
-});
-popupEdit.addEventListener("keydown", function (evt) {
-  if (evt.key === "Escape") {
-    popupVisible(popupEdit);
-  }
+  openPopup(popupEditProfile);
+  
 });
 
 ////при клике на на кнопку создания карточки, открытие модального окна
-buttonNewCard.addEventListener("click", function () {
-  popupVisible(popupNewCard);
-});
-//Закрытие модального окна созадния карточки
-popupNewCard.addEventListener("click", function (evt) {
-  if (
-    evt.target.classList.contains("popup__close") ||
-    evt.target.classList.contains("popup")
-  ) {
-    popupVisible(popupNewCard);
-  }
-});
-popupNewCard.addEventListener("keydown", function (evt) {
-  if (evt.key === "Escape") {
-    popupVisible(popupNewCard);
-  }
+buttonNewCard.addEventListener("click", function(){
+  openPopup(popupNewCard);
 });
 
 //При клике на картинку, открытие модального для просмотра картинка
 cardList.addEventListener("click", function (evt) {
   if (evt.target.classList.contains("card__image")) {
-    popupVisible(popupImage);
-  }
-});
-//Закрытие модального окна просмотра картинки
-popupImage.addEventListener("click", function (evt) {
-  if (
-    evt.target.classList.contains("popup__close") ||
-    evt.target.classList.contains("popup")
-  ) {
-    popupVisible(popupImage);
-  }
-});
-popupImage.addEventListener("keydown", function (evt) {
-  if (evt.key === "Escape") {
-    popupVisible(popupImage);
+    openPopup(popupImage);
   }
 });
 
 //РЕДАКТИРОВАНИЕ ПРОФИЛЯ
 //форма редактирования профиля
-const formElement = document.forms["edit-profile"];
+const formEditProfile = document.forms["edit-profile"];
 //новое имя
-const nameInput = formElement.querySelector(".popup__input_type_name");
+const nameInput = formEditProfile.querySelector(".popup__input_type_name");
 //новая работа
-const jobInput = formElement.querySelector(".popup__input_type_description");
+const jobInput = formEditProfile.querySelector(".popup__input_type_description");
 //нынешнее имя профиля
 const profileTitle = document.querySelector(".profile__title");
 //нынешняя работа
 const profileDescription = document.querySelector(".profile__description");
 
-function handleFormSubmit(evt) {
+function submitEditProfileForm(evt) {
   evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
 
   const valueName = nameInput.value;
@@ -114,10 +69,10 @@ function handleFormSubmit(evt) {
 
   profileTitle.textContent = valueName;
   profileDescription.textContent = valueJob;
-  popupVisible(popupEdit);
+  popupVisible(popupEditProfile);
 }
 
-formElement.addEventListener("submit", handleFormSubmit);
+formEditProfile.addEventListener("submit", submitEditProfileForm);
 
 //форма для новой крточки
 const formCard = document.forms["new-place"];
@@ -126,7 +81,7 @@ const nameCard = formCard.querySelector(".popup__input_type_card-name");
 //ссылка на карточку
 const linkCard = formCard.querySelector(".popup__input_type_url");
 
-function cardFormSubmit(evt) {
+function submitAddCardForm(evt) {
   evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
   const newCard = [
     {
@@ -134,26 +89,27 @@ function cardFormSubmit(evt) {
       link: linkCard.value,
     },
   ];
-  renderCard(deleteCard, newCard, cardList);
-  popupVisible(popupNewCard);
-  nameCard.value = "";
-  linkCard.value = "";
+  renderInitialCards(deleteCard, newCard, cardList);
+  closePopup(popupNewCard);
+  formCard.reset();
 }
 
 //добавление карточки
-formCard.addEventListener("submit", cardFormSubmit);
+formCard.addEventListener("submit", submitAddCardForm);
 
 //ПОСТАВИТЬ ЛАЙК
 
-cardList.addEventListener("click", likeButtonActive);
+
 
 //ОТКРЫТИЕ КАРТИНКИ
+const image = popupImage.querySelector(".popup__image");
+const caption = popupImage.querySelector(".popup__caption");
 
-function openImage(evt) {
-  const image = popupImage.querySelector(".popup__image");
-  const caption = popupImage.querySelector(".popup__caption");
+export function openImage(evt) {
+
   image.src = evt.target.src;
   caption.textContent = evt.target.alt;
+  image.alt = evt.target.alt;
 }
 
-cardList.addEventListener("click", openImage);
+

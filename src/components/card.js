@@ -1,15 +1,26 @@
-const cardTimplate = document.querySelector("#card-template").content;
+
+const cardTemplate = document.querySelector("#card-template").content;
 
 // @todo: Функция создания карточки
-export function createCard(callback, cardData, likeButtonActive, openImage) {
-  const cardElement = cardTimplate.querySelector(".card").cloneNode(true);
+export function createCard(deleteCard, cardData, likeButtonActive, openImage) {
+  const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
+
   const deleteButton = cardElement.querySelector(".card__delete-button");
 
-  cardElement.querySelector(".card__title").textContent = cardData.name;
-  cardElement.querySelector(".card__image").src = cardData.link;
-  cardElement.querySelector(".card__image").alt = cardData.name;
+  const likeButton = cardElement.querySelector(".card__like-button");
 
-  deleteButton.addEventListener("click", callback);
+  const cardTitle = cardElement.querySelector(".card__title");
+  cardTitle.textContent = cardData.name;
+
+  const cardImage = cardElement.querySelector(".card__image");
+  cardImage.src = cardData.link;
+  cardImage.alt = cardData.name;
+  
+  likeButton.addEventListener("click", likeButtonActive);
+  cardImage.addEventListener("click", openImage);
+  deleteButton.addEventListener("click", deleteCard);
+
+
   return cardElement;
 }
 
@@ -20,11 +31,10 @@ export function deleteCard(evt) {
 
 //Установка/убрать лайк
 export function likeButtonActive(evt) {
+  
   evt.target.classList.toggle("card__like-button_is-active");
 }
 
-//ЭТО СОЗДАНИЕ КАРТОЧКИ
-
-// Находим форму в DOM
-
-// Находим поля формы в DOM
+// function getCardTemplate(){
+//   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
+// }
