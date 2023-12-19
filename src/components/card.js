@@ -35,6 +35,7 @@ export function likeButtonActive(evt) {
   evt.target.classList.toggle("card__like-button_is-active");
 }
 
+
 // function getCardTemplate(){
 //   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
 // }

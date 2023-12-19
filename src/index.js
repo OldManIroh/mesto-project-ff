@@ -6,9 +6,9 @@ import { openPopup, closePopup } from "./components/modal.js";
 const cardList = document.querySelector(".places__list");
 
 // @todo: Вывести карточки на страницу
-function renderInitialCards(callback, listWhereFrom, listWhere) {
+function renderInitialCards(deleteCard, listWhereFrom, listWhere) {
   listWhereFrom.forEach(function (item) {
-    listWhere.prepend(createCard(callback, item, likeButtonActive, openImage));
+    listWhere.prepend(createCard(deleteCard, item, likeButtonActive, openImage));
   });
 }
 
@@ -42,12 +42,7 @@ buttonNewCard.addEventListener("click", function(){
   openPopup(popupNewCard);
 });
 
-//При клике на картинку, открытие модального для просмотра картинка
-cardList.addEventListener("click", function (evt) {
-  if (evt.target.classList.contains("card__image")) {
-    openPopup(popupImage);
-  }
-});
+
 
 //РЕДАКТИРОВАНИЕ ПРОФИЛЯ
 //форма редактирования профиля
@@ -69,7 +64,8 @@ function submitEditProfileForm(evt) {
 
   profileTitle.textContent = valueName;
   profileDescription.textContent = valueJob;
-  popupVisible(popupEditProfile);
+  openPopup(popupEditProfile);
+  closePopup(popupEditProfile)
 }
 
 formEditProfile.addEventListener("submit", submitEditProfileForm);
@@ -81,17 +77,23 @@ const nameCard = formCard.querySelector(".popup__input_type_card-name");
 //ссылка на карточку
 const linkCard = formCard.querySelector(".popup__input_type_url");
 
+function renderCard (deleteCard, listWhereFrom, listWhere ){
+  listWhere.prepend(createCard(deleteCard, listWhereFrom, likeButtonActive, openImage));
+}
+
 function submitAddCardForm(evt) {
   evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
+  
   const newCard = [
     {
       name: nameCard.value,
       link: linkCard.value,
     },
   ];
-  renderInitialCards(deleteCard, newCard, cardList);
+  renderCard(deleteCard, newCard, cardList);
   closePopup(popupNewCard);
   formCard.reset();
+  
 }
 
 //добавление карточки
@@ -110,6 +112,8 @@ export function openImage(evt) {
   image.src = evt.target.src;
   caption.textContent = evt.target.alt;
   image.alt = evt.target.alt;
+  //При клике на картинку, открытие модального для просмотра картинка
+cardList.addEventListener("click", openPopup(popupImage));
 }
 
 
