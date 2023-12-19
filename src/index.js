@@ -83,22 +83,21 @@ function renderCard (deleteCard, listWhereFrom, listWhere ){
 
 function submitAddCardForm(evt) {
   evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
-  
   const newCard = [
     {
       name: nameCard.value,
       link: linkCard.value,
     },
   ];
-  renderCard(deleteCard, newCard, cardList);
+  
+  renderCard (deleteCard, newCard[0], cardList )
   closePopup(popupNewCard);
   formCard.reset();
-  
 }
 
 //добавление карточки
 formCard.addEventListener("submit", submitAddCardForm);
-
+// renderCard(deleteCard, newCard, cardList);
 //ПОСТАВИТЬ ЛАЙК
 
 
