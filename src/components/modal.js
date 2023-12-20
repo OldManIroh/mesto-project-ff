@@ -1,15 +1,13 @@
-const page = document.querySelector('.page');
-
 export function openPopup(popup){
   popup.classList.add('popup_is-opened');
   popup.addEventListener('click',closeByOverlay)
-  page.addEventListener('keydown',closeByEsc)
+  document.addEventListener('keydown',closeByEsc)
 }
 
 export function closePopup(popup){
   popup.classList.remove('popup_is-opened');
   popup.removeEventListener('click',closeByOverlay);
-  page.removeEventListener('keydown',closeByEsc);
+  document.removeEventListener('keydown',closeByEsc);
 }
 
 function closeByOverlay(evt){

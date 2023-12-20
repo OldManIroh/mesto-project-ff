@@ -64,7 +64,7 @@ function submitEditProfileForm(evt) {
 
   profileTitle.textContent = valueName;
   profileDescription.textContent = valueJob;
-  openPopup(popupEditProfile);
+ 
   closePopup(popupEditProfile)
 }
 
@@ -83,14 +83,14 @@ function renderCard (deleteCard, listWhereFrom, listWhere ){
 
 function submitAddCardForm(evt) {
   evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
-  const newCard = [
+  const newCard = 
     {
       name: nameCard.value,
       link: linkCard.value,
-    },
-  ];
+    };
   
-  renderCard (deleteCard, newCard[0], cardList )
+  
+  renderCard (deleteCard, newCard, cardList )
   closePopup(popupNewCard);
   formCard.reset();
 }
@@ -112,7 +112,7 @@ export function openImage(evt) {
   caption.textContent = evt.target.alt;
   image.alt = evt.target.alt;
   //При клике на картинку, открытие модального для просмотра картинка
-cardList.addEventListener("click", openPopup(popupImage));
+  openPopup(popupImage);
 }
 
 
