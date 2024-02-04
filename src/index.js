@@ -16,7 +16,7 @@ const profileImage = document.querySelector('.profile__image');
 
 Promise.all([getAllCard(), downloadProfile()])
     .then(([dataCard, dataProfile]) => {
-      console.log(dataProfile);
+      
       renderInitialCards(deleteCard, dataCard, cardList, dataProfile._id);
       profileImage.style = `background-image: url('${dataProfile.avatar}');`;
       profileTitle.textContent = dataProfile.name;

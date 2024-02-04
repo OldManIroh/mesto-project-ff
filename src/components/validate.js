@@ -26,7 +26,6 @@ function checkInputValidity(input, form, config){
     }else{
         input.setCustomValidity('');
     }
-    console.log(input.validity.valid);
     if (input.validity.valid){
         hideError(input, errorElement, config)
     } else {
