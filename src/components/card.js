@@ -40,7 +40,7 @@ export function createCard(deleteCard, cardData, likeButtonActive, openImage, pr
 }
 
 // @todo: Функция удаления карточки
-export function deleteCard(evt) {
+/*export function deleteCard(evt) {
   const card = evt.target.closest(".card");
 
   uninstallCard(card.dataset.id).then((data) => {
@@ -49,7 +49,7 @@ export function deleteCard(evt) {
     }
   })
   .catch(err => console.log(err));
-}
+}*/
 
 //Установка/убрать лайк
 export function likeButtonActive(evt) {

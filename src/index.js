@@ -1,6 +1,6 @@
 import "./pages/index.css";
 // import { initialCards } from "./components/cards.js";
-import { createCard, deleteCard, likeButtonActive } from "./components/card.js";
+import { createCard, /*deleteCard,*/ likeButtonActive } from "./components/card.js";
 import { openPopup, closePopup } from "./components/modal.js";
 import { clearValidation, enableValidation } from "./components/validate.js";
 import {
@@ -9,6 +9,7 @@ import {
   uploadProfile,
   uploadCard,
   uploadAvatar,
+  uninstallCard
 } from "./components/api.js";
 const cardList = document.querySelector(".places__list");
 
@@ -182,6 +183,41 @@ export function openImage(evt) {
   //При клике на картинку, открытие модального для просмотра картинка
   openPopup(popupImage);
 }
+
+// УДАЛЕНИЕ КАРТОЧКИ
+// попап для подтверждения удаления карточки
+const popupDeletCard = document.querySelector('.popup_type_confirm-delete');
+// форма подтверждения удаления карточки
+const formConfirmDelete = document.forms["confirm"];
+// кнопка подтверждения
+const buttonConfirm = formConfirmDelete.querySelector('.button');
+// функция открытия попапа
+function deleteCard(evt){
+  const cardId = evt.target.closest(".card").dataset.id;
+  buttonConfirm.dataset.id = cardId;
+  buttonConfirm.textContent = "Да";
+  buttonConfirm.classList.remove("blink-button");
+  openPopup(popupDeletCard)
+}
+// сабмит удаления карточки
+function submitConfirmDeleteCard(evt){
+  evt.preventDefault();
+  buttonConfirm.textContent = "Выполнение...";
+  buttonConfirm.classList.add("blink-button");
+  uninstallCard(buttonConfirm.dataset.id).then((data) => {
+    if(data.message == 'Пост удалён'){
+      const card = document.querySelector(`[data-id="${buttonConfirm.dataset.id}"]`)
+      card.remove();
+      closePopup(popupDeletCard);
+    }
+  })
+  .catch(err => console.log(err));
+}
+// вызов сабмита удаления крточки
+formConfirmDelete.addEventListener('submit', submitConfirmDeleteCard);
+
+
+
 
 //валидация
 const validationConfig = {
