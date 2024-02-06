@@ -16,7 +16,10 @@
     </header>
     <main class="content">
       <section class="profile page__section">
+        <div class="profile__avatar">
           <div class="profile__image" style="background-image: url('<%= require('./images/avatar.jpg') %>');"></div>
+          <img class="profile__image-hover" src="<%= require('./images/Vector.svg') %>"  alt="Карандаш">
+          </div>
         <div class="profile__info">
           <h1 class="profile__title">Жак-Ив Кусто</h1>
           <button class="profile__edit-button" type="button"></button>
@@ -85,7 +88,11 @@
               name="place-name"
               class="popup__input popup__input_type_card-name"
               placeholder="Название"
-              required 
+              required
+              minlength="2"
+              maxlength="30"
+              data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
+              pattern="[a-zA-Zа-яА-ЯёЁ \-]+" 
             >
             <span id="place-name--error" class="message-error"></span>
           </label>
@@ -107,7 +114,7 @@
     </div>
   
     <div class="popup popup_type_new-avatar">
-      <div class="popup__content">
+      <div class="popup__content popup__avatar">
         <button type="button" class="popup__close"></button>
         <h3 class="popup__title">Обновить аватар</h3>
         <form class="popup__form" name="new-avatar" novalidate>

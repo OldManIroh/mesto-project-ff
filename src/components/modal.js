@@ -20,7 +20,6 @@ function closeByOverlay(evt){
 }
 
 function closeByEsc(evt){
-  console.log(evt.key)
   if(evt.key === 'Escape'){
       const popup = document.querySelector('.popup_is-opened');
        closePopup(popup);

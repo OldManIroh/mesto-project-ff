@@ -41,7 +41,8 @@ function hasInvalidInput(inputList){
 }
 
 function toggleButtomState(buttonElement, inputList){
-    buttonElement.disabled = hasInvalidInput(inputList)
+    buttonElement.disabled = hasInvalidInput(inputList);
+    
 }
 //Слушатели
 function setEventListener(formElement, config) {
@@ -49,11 +50,11 @@ function setEventListener(formElement, config) {
     const buttonElement = formElement.querySelector(config.buttonSelector);
     //поля ввода
     const inputList = Array.from(formElement.querySelectorAll(config.inputSelector));
-    // toggleButtomState(buttonElement, inputList); УБРАТЬ КОМЕНТАРИЙ И ПОЧИНИТЬ
+    // toggleButtomState(buttonElement, inputList); 
     inputList.forEach((input)=>{
         input.addEventListener('input', ()=>{
             checkInputValidity(input, formElement, config);
-            // toggleButtomState(buttonElement, inputList); УБРАТЬ КОМЕНТАРИЙ И ПОЧИНИТЬ
+            toggleButtomState(buttonElement, inputList); 
         });
         
     })
@@ -61,8 +62,20 @@ function setEventListener(formElement, config) {
 //Функции
 export function enableValidation(config){
     const forms = Array.from(document.querySelectorAll(config.formSelector));
-    
     forms.forEach((formElement) =>{
         setEventListener(formElement, config)
     });
+}
+//Очистка ошибок валидации и установка неактивной кнопки
+//использовать при открытии формы профиля и закрытия и при очистки формы добавления карточки
+export function clearValidation(formElement, config){
+    const buttonElement = formElement.querySelector(config.buttonSelector);
+    const inputList = Array.from(formElement.querySelectorAll(config.inputSelector));
+    inputList.forEach((input)=>{
+        const spanIdSelector = `#${input.name}--error`;
+        const errorElement = formElement.querySelector(spanIdSelector);
+        hideError(input, errorElement, config)
+    })
+    formElement.reset()
+    toggleButtomState(buttonElement, inputList)
 }

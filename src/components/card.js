@@ -1,3 +1,4 @@
+import { data } from "autoprefixer";
 import {  uninstallCard, likeCard, deleteLike } from "./api";
 const cardTemplate = document.querySelector("#card-template").content;
 
@@ -23,44 +24,43 @@ export function createCard(deleteCard, cardData, likeButtonActive, openImage, pr
   
   likeButton.addEventListener("click", likeButtonActive);
   cardImage.addEventListener("click", openImage);
-  deleteButton.addEventListener("click", deleteCard);
+
 
   if (profileId != cardData.owner._id){
     deleteButton.remove()
+  }else{
+    deleteButton.addEventListener("click", deleteCard);
   }
-  cardData.likes.forEach(element => {
-    if(element._id === profileId){
-      likeButton.classList.add("card__like-button_is-active");
-    }
-  });
+
+  if(cardData.likes.some(element => element._id === profileId)){ 
+    likeButton.classList.add("card__like-button_is-active"); 
+  }
+
   return cardElement;
 }
 
 // @todo: Функция удаления карточки
 export function deleteCard(evt) {
   const card = evt.target.closest(".card");
-  uninstallCard(card.dataset.id)
-  
-  card.remove();
 
+  uninstallCard(card.dataset.id).then((data) => {
+    if(data.message == 'Пост удалён'){
+      card.remove();
+    }
+  })
+  .catch(err => console.log(err));
 }
 
 //Установка/убрать лайк
 export function likeButtonActive(evt) {
    const cardId = evt.target.closest(".card").dataset.id;
-  if (evt.target.classList.contains("card__like-button_is-active")) {
-    evt.target.classList.remove("card__like-button_is-active");
-    deleteLike(cardId).then((data)=>{
-      evt.target.nextElementSibling.textContent = data.likes.length
-
-    });
-  }else{
-    evt.target.classList.add("card__like-button_is-active");
-    likeCard(cardId).then((data)=>{
-      evt.target.nextElementSibling.textContent = data.likes.length
-
-    });;
-  }
+   const likeMethod = evt.target.classList.contains("card__like-button_is-active") ? deleteLike : likeCard;
+   likeMethod(cardId) 
+           .then((data) => {
+              evt.target.nextElementSibling.textContent = data.likes.length 
+             evt.target.classList.toggle("card__like-button_is-active"); 
+           })
+   .catch(err => console.log(err));
 }
 
 

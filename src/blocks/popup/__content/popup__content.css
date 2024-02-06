@@ -8,6 +8,9 @@
   box-sizing: border-box;
   padding: 34px 36px;
 }
+.popup__avatar {
+  min-height: 272px;
+}
 
 @media screen and (max-width: 568px) {
   .popup__content {
